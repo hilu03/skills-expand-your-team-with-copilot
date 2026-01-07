@@ -850,24 +850,17 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.href = `mailto:?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
     } else if (button.classList.contains('copy-link')) {
       // Copy link to clipboard
-      navigator.clipboard.writeText(shareUrl).then(() => {
-        showMessage('Link copied to clipboard!', 'success');
-      }).catch(() => {
-        // Fallback for older browsers
-        const textArea = document.createElement('textarea');
-        textArea.value = shareUrl;
-        textArea.style.position = 'fixed';
-        textArea.style.left = '-999999px';
-        document.body.appendChild(textArea);
-        textArea.select();
-        try {
-          document.execCommand('copy');
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        // Modern API
+        navigator.clipboard.writeText(shareUrl).then(() => {
           showMessage('Link copied to clipboard!', 'success');
-        } catch (err) {
-          showMessage('Failed to copy link', 'error');
-        }
-        document.body.removeChild(textArea);
-      });
+        }).catch(() => {
+          showMessage(`Unable to copy. Link: ${shareUrl}`, 'error');
+        });
+      } else {
+        // Fallback: show the URL in a message for manual copying
+        showMessage(`Copy this link: ${shareUrl}`, 'info');
+      }
     }
   }
 
