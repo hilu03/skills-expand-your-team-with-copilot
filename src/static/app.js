@@ -36,6 +36,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (darkMode === "enabled") {
       document.body.classList.add("dark-mode");
       themeIcon.textContent = "☀️";
+    } else {
+      // Ensure default icon state when no preference is saved or disabled
+      themeIcon.textContent = "🌙";
     }
   }
 
